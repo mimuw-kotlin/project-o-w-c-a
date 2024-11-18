@@ -17,6 +17,7 @@ Dziennik szkolny, będzie aplikacją webową starającą się skorzystać na ost
 
 ## Plan
 - Na początek chciałbym zaimplementować wielowątkowy serwer (przypuszczalnie REST API) komunikujący się z bazą danych
+(chyba we frameworku SpringBoot)
 - Następnie dorobić do tego UI (które nie będzie szkicowe) i dodać profile użytkowników, logowania, admina
 
 ## Libraries
