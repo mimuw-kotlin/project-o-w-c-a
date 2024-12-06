@@ -1,11 +1,7 @@
-package com.modules.db.tablesImpl
+package com.modules.db.tables
 
 import com.modules.db.ConstsDB
 import com.modules.db.UserTypes
-import com.modules.db.tablesImpl.StudentsTable.default
-import com.modules.db.tablesImpl.StudentsTable.references
-import com.modules.db.tablesImpl.StudentsTable.uniqueIndex
-import com.modules.db.tablesImpl.StudentsTable.varchar
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 

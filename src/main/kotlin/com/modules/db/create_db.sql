@@ -30,6 +30,7 @@ CREATE TABLE Teachers (
 DROP TABLE IF EXISTS Subjects;
 CREATE TABLE Subjects (
    id SERIAL PRIMARY KEY,
+   subject_code VARCHAR(10) NOT NULL UNIQUE,
    subject_name VARCHAR(70) NOT NULL,
    description VARCHAR(555) DEFAULT 'No description available'
 );

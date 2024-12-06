@@ -1,4 +1,4 @@
-package com.modules.db.tablesImpl
+package com.modules.db.tables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 import com.modules.db.ConstsDB

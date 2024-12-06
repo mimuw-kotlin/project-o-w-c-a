@@ -1,9 +1,8 @@
-package com.modules.db.tablesImpl
+package com.modules.db.tables
 
 import com.modules.db.ConstsDB
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 
 // A DAO (Data Access Object) is a design pattern that provides an
 // abstract interface to some type of database

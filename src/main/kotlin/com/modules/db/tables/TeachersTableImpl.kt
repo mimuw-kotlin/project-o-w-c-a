@@ -1,8 +1,8 @@
-package com.modules.db.tablesImpl
+package com.modules.db.tables
 
 import com.modules.db.tablesInterfaces.SchoolUserInterface
 
-class StudentsTableImpl : SchoolUserInterface {
+class TeachersTableImpl : SchoolUserInterface{
     override suspend fun getAll() {
         TODO("Not yet implemented")
     }
