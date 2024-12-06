@@ -1,0 +1,19 @@
+package com.modules.db.tablesImpl
+
+import com.modules.db.ConstsDB
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
+
+// A DAO (Data Access Object) is a design pattern that provides an
+// abstract interface to some type of database
+// This is databae table for tasks, it's an object
+// because we need only one database table for tasks
+// IntIdTable is a class that represents a table with an integer primary key
+object StudentsTable : IntIdTable(ConstsDB.STUDENTS) {
+    val index = varchar(ConstsDB.INDEX, 8).uniqueIndex()
+    val username = varchar(ConstsDB.USERNAME, 70)
+    val user_type = varchar(ConstsDB.USER_TYPE, 20).default(ConstsDB.STUDENT)
+    val class_nbr = varchar(ConstsDB.CLASS_NBR, 3).references(ClassesTable.class_nbr,
+                                                                    onDelete = ReferenceOption.CASCADE)
+}
