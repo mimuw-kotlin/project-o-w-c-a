@@ -1,4 +1,4 @@
-package com.modules.db
+package com.modules.db.other
 
 // Only admin can add new user types
 object UserTypes {

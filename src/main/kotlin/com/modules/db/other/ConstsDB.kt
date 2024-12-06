@@ -1,4 +1,4 @@
-package com.modules.db
+package com.modules.db.other
 
 object ConstsDB{
     const val STUDENT = "student"
@@ -16,7 +16,7 @@ object ConstsDB{
     const val CLASS_TEACHER_NAME = "class_teacher_name"
     const val SUBJECTS = "subjects"
     const val SUBJECT_NAME = "subject_name"
-    const val SUBJECT_CODE = "subject_code"
+    const val SUBJECT_INDEX = "subject_index"
     const val DESCRIPTION = "description"
     const val NO_DESCR_AVAILABLE = "No description available"
     const val PASSWORDS = "passwords"

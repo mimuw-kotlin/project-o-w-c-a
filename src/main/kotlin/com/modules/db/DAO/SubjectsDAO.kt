@@ -9,7 +9,7 @@ class SubjectsDAO (id: EntityID<Int>) : IntEntity(id){
 
     companion object : IntEntityClass<SubjectsDAO>(SubjectsTable)
 
-    var subject_code by SubjectsTable.subject_code
+    var subject_index by SubjectsTable.subject_index
     var subject_name by SubjectsTable.subject_name
     var description by SubjectsTable.description
 }

@@ -1,6 +1,6 @@
 package com.modules.db.tables
 
-import com.modules.db.tablesInterfaces.SchoolUserInterface
+import com.modules.db.reposInterfaces.SchoolUserInterface
 
 class StudentsTableImpl : SchoolUserInterface {
     override suspend fun getAll() {

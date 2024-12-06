@@ -1,7 +1,7 @@
 package com.modules.db.tables
 
-import com.modules.db.ConstsDB
-import com.modules.db.UserTypes
+import com.modules.db.other.ConstsDB
+import com.modules.db.other.UserTypes
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 
