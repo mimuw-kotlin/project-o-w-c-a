@@ -14,4 +14,11 @@ object ConstsDB{
     const val CLASS_NBR = "class_nbr"
     const val CLASSES = "classes"
     const val CLASS_TEACHER_NAME = "class_teacher_name"
+    const val SUBJECTS = "subjects"
+    const val SUBJECT_NAME = "subject_name"
+    const val DESCRIPTION = "description"
+    const val NO_DESCR_AVAILABLE = "No description available"
+    const val PASSWORDS = "passwords"
+    const val PASSWORD = "password"
+
 }

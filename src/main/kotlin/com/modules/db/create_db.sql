@@ -30,7 +30,7 @@ CREATE TABLE Teachers (
 DROP TABLE IF EXISTS Subjects;
 CREATE TABLE Subjects (
    id SERIAL PRIMARY KEY,
-   name VARCHAR(70) NOT NULL,
+   subject_name VARCHAR(70) NOT NULL,
    description VARCHAR(555) DEFAULT 'No description available'
 );
 
@@ -41,4 +41,9 @@ CREATE TABLE passwords (
    password VARCHAR(70) NOT NULL
 );
 
-
+CREATE TABLE admin (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(70) NOT NULL,
+    password VARCHAR(70) NOT NULL
+    user_type VARCHAR(20) DEFAULT 'admin'
+);
