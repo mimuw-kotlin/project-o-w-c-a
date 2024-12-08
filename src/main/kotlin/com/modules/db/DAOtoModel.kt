@@ -29,7 +29,7 @@ fun classDAOToModel(dao: ClassesDAO) = ClassModel(
 )
 
 fun subjectDAOToModel(dao: SubjectsDAO) = SubjectModel(
-    subject_code = dao.subject_code,
+    subject_code = dao.subject_index,
     subject_name = dao.subject_name,
     description = dao.description
 )

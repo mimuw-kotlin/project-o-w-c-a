@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.ReferenceOption
 
 // A DAO (Data Access Object) is a design pattern that provides an
 // abstract interface to some type of database
-// This is databae table for tasks, it's an object
+// This is database table for tasks, it's an object
 // because we need only one database table for tasks
 // IntIdTable is a class that represents a table with an integer primary key
 object StudentsTable : IntIdTable(ConstsDB.STUDENTS) {

@@ -6,9 +6,9 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 
-interface BasicInterface <Class> {
-    suspend fun getAll(): List<Class>
-    suspend fun getByIndex(index: String)
-    suspend fun removeByIndex(index: String)
-    suspend fun <T> addRow(newRow: T)
+interface BasicInterface <ModelT> {
+    suspend fun getAll(): List<ModelT>
+    suspend fun getByIndex(index: String): ModelT?
+    suspend fun removeByIndex(index: String): Boolean
+    suspend fun addRow(newRow: ModelT)
 }

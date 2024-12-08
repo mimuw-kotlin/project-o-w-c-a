@@ -1,4 +1,51 @@
 package com.modules.db.repos
 
-class StudentRepo {
+import com.modules.db.dataModels.StudentModel
+import com.modules.db.tables.StudentsTable
+import com.modules.db.DAO.StudentsDAO
+import com.modules.db.studentDAOToModel
+import com.modules.db.reposInterfaces.SchoolUsersInterface
+import com.modules.db.suspendTransaction
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+
+class StudentRepo : SchoolUsersInterface<StudentModel>{
+
+    override suspend fun getByClassNbr(clsNbr: String): List<StudentModel> = suspendTransaction {
+        StudentsDAO
+            .find {(StudentsTable.class_nbr eq clsNbr)}
+            .map(::studentDAOToModel)
+    }
+
+    override suspend fun getByUsername(username: String): StudentModel? = suspendTransaction {
+        StudentsDAO
+            .find {(StudentsTable.username eq username)}
+            .map(::studentDAOToModel)
+            .firstOrNull()
+    }
+
+    override suspend fun getAll(): List<StudentModel> = suspendTransaction {
+        StudentsDAO.all().map(::studentDAOToModel)
+    }
+
+    override suspend fun getByIndex(index: String) = suspendTransaction {
+        StudentsDAO
+            .find {(StudentsTable.index eq index)}
+            .map(::studentDAOToModel)
+            .firstOrNull()
+    }
+
+    override suspend fun removeByIndex(index: String) = suspendTransaction {
+        val rowsDeleted = StudentsTable.deleteWhere { StudentsTable.index eq index }
+        rowsDeleted == 1
+    }
+
+    override suspend fun addRow(newRow: StudentModel) {
+        StudentsDAO.new {
+            index = newRow.index
+            username = newRow.username
+            user_type = newRow.user_type
+            class_nbr = newRow.class_nbr
+        }
+    }
 }

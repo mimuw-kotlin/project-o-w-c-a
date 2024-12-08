@@ -1,6 +1,7 @@
 package com.modules.db.other
 
 // Only admin can add new user types
+// Ultimately there will be a sql table for user types
 object UserTypes {
     private val allowedTypes = mutableSetOf(
                                 ConstsDB.STUDENT,
