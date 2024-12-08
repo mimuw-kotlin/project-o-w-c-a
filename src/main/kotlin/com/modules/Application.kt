@@ -21,6 +21,6 @@ fun Application.module() {
     configureDatabases(environment.config)
     configureTemplating()
     configureHTTP()
-    configureSecurity(passwordRepo)
+    configureSecurity(passwordRepo, teacherRepo, studentRepo, adminRepo)
     configureRouting()
 }

@@ -32,13 +32,11 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 
-// Username value can be either username or index
+// Username value can be either username or index - currently only username is supported
 @Serializable
 data class UserSession(val username: String, val password: String, val userType: String)
 
 suspend fun checkPassword(pswdRepo: PasswordRepo, username: String, password: String): Boolean {
-
-
     when (pswdRepo.checkPassword(username, password)) {
         PswdCheckRetVal.USER_NOT_FOUND -> false
         PswdCheckRetVal.PASSWORD_INCORRECT -> false
@@ -134,7 +132,6 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
         }
     }
     routing {
-
 
         authenticate("login-form-auth") {
             post("/login"){

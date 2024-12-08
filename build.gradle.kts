@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.dao)
+    implementation(libs.ktor.server.html.builder)
     implementation(libs.h2)
     implementation(libs.postgresql)
     implementation(libs.ktor.server.thymeleaf)

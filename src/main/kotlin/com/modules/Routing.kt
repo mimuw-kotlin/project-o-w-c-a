@@ -12,6 +12,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import io.ktor.server.html.*
+import io.ktor.server.http.content.*
+import kotlinx.html.*
 import io.ktor.server.thymeleaf.Thymeleaf
 import io.ktor.server.thymeleaf.ThymeleafContent
 import io.ktor.server.websocket.*
@@ -28,14 +31,126 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 fun Application.configureRouting() {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
+            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-        // Static plugin. Try to access `/static/index.html`
         staticResources("/static", "static")
+
+        get("/") {
+            call.respondHtml {
+                body {
+                    h1 {
+                        "Dziennik"
+                    }
+                    a("/loginForm") {
+                        +"Login"
+                    }
+                    h2 {
+                        "Rejestracja:"
+                    }
+                    a("/registerStudent") {
+                        +"Rejestracja ucznia"
+
+                    }
+                    a("/registerTeacher") {
+                        +"Rejestracja nauczyciela"
+
+                    }
+                }
+            }
+        }
+
+        get("/loginForm") {
+            val existingSession = call.sessions.get<UserSession>()
+
+            if (existingSession != null)
+            {
+                call.respondText("Already logged in as ${existingSession.username}.")
+            }
+
+            call.respondHtml {
+                body {
+                    form(
+                        action = "/login",
+                        encType = FormEncType.applicationXWwwFormUrlEncoded,
+                        method = FormMethod.post
+                    ) {
+                        p {
+                            +"Username:"
+                            textInput(name = "username")
+                        }
+                        p {
+                            +"Password:"
+                            passwordInput(name = "password")
+                        }
+                        p {
+                            submitInput() { value = "Login" }
+                        }
+                    }
+                }
+            }
+        }
+
+        get("/registerStudent") {
+            val existingSession = call.sessions.get<UserSession>()
+
+            if (existingSession != null)
+            {
+                call.respondText("Already logged in as ${existingSession.username}.")
+            }
+
+            call.respondHtml {
+                body {
+                    form(
+                        action = "/registerStudent",
+                        encType = FormEncType.applicationXWwwFormUrlEncoded,
+                        method = FormMethod.post
+                    ) {
+                        p {
+                            +"Username:"
+                            textInput(name = "username")
+                        }
+                        p {
+                            +"Password:"
+                            passwordInput(name = "password")
+                        }
+                        p {
+                            submitInput() { value = "Register" }
+                        }
+                    }
+                }
+            }
+        }
+
+        get("/registerTeacher") {
+            val existingSession = call.sessions.get<UserSession>()
+
+            if (existingSession != null)
+            {
+                call.respondText("Already logged in as ${existingSession.username}.")
+            }
+            call.respondHtml {
+                body {
+                    form(
+                        action = "/registerTeacher",
+                        encType = FormEncType.applicationXWwwFormUrlEncoded,
+                        method = FormMethod.post
+                    ) {
+                        p {
+                            +"Username:"
+                            textInput(name = "username")
+                        }
+                        p {
+                            +"Password:"
+                            passwordInput(name = "password")
+                        }
+                        p {
+                            submitInput() { value = "Register" }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
