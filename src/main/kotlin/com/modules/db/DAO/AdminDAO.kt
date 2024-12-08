@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 class AdminDAO(id: EntityID<Int>) : IntEntity(id){
     companion object CompObj : IntEntityClass<AdminDAO>(AdminTable)
 
-    val username by AdminTable.username
-    val password by AdminTable.password
-    val user_type by AdminTable.user_type
+    var username by AdminTable.username
+    var password by AdminTable.password
+    var user_type by AdminTable.user_type
 }

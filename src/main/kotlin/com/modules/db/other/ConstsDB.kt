@@ -21,5 +21,5 @@ object ConstsDB{
     const val NO_DESCR_AVAILABLE = "No description available"
     const val PASSWORDS = "passwords"
     const val PASSWORD = "password"
-
+    const val SUPER_ADMIN = "superAdmin"
 }

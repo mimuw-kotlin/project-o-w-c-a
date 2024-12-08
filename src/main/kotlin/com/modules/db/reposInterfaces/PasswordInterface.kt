@@ -1,12 +1,7 @@
 package com.modules.db.reposInterfaces
-
-enum class PasswordCheckRetVal {
-    USER_NOT_FOUND,
-    PASSWORD_INCORRECT,
-    PASSWORD_CORRECT
-}
+import com.modules.db.other.PswdCheckRetVal
 
 interface PasswordInterface {
-    suspend fun checkPassword(username: String, password: String): PasswordCheckRetVal
+    suspend fun checkPassword(username: String, password: String): PswdCheckRetVal
     suspend fun setPassword(username: String, password: String)
 }

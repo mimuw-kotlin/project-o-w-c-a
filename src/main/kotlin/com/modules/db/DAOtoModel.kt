@@ -1,15 +1,13 @@
 package com.modules.db
 
-import com.modules.db.DAO.ClassesDAO
-import com.modules.db.DAO.StudentsDAO
-import com.modules.db.DAO.SubjectsDAO
-import com.modules.db.DAO.TeachersDAO
-import com.modules.db.DAO.PasswordsDAO
-import com.modules.db.dataModels.ClassModel
-import com.modules.db.dataModels.StudentModel
-import com.modules.db.dataModels.SubjectModel
-import com.modules.db.dataModels.TeacherModel
-import com.modules.db.dataModels.PasswordModel
+import com.modules.db.DAO.*
+import com.modules.db.dataModels.*
+
+fun adminDAOToModel(dao: AdminDAO) = AdminModel(
+    username = dao.username,
+    password = dao.password,
+    user_type = dao.user_type
+)
 
 fun studentDAOToModel(dao: StudentsDAO) = StudentModel(
     index = dao.index,
