@@ -111,9 +111,9 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
                 checkPassword(pswdRepo, credentials.name, credentials.password)
             }
         }
-    
+
         form(name = "login-form-auth") {
-            userParamName = "user"
+            userParamName = "username"
             passwordParamName = "password"
 
             validate { credentials ->

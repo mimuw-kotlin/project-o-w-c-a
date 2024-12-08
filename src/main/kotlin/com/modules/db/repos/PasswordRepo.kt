@@ -19,8 +19,12 @@ class PasswordRepo : PasswordInterface {
             .firstOrNull()
 
         if (details == null)
+        {
+            println("LOG: pswdRepo.checkPassword: user not found")
             return@suspendTransaction PswdCheckRetVal.USER_NOT_FOUND
-
+        }
+        val hashedPassword = PasswordUtils.hashPassword(password)
+        println("LOG: pswdRepo.checkPassword: hashedPassword: $hashedPassword")
         val retCheckVal = PasswordUtils.verifyPassword(password, details.password)
 
         if (retCheckVal)

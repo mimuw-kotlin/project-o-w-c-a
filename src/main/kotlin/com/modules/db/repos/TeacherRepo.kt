@@ -40,7 +40,7 @@ class TeacherRepo : SchoolUsersInterface<TeacherModel>{
         rowsDeleted == 1
     }
 
-    override suspend fun addRow(newRow: TeacherModel) {
+    override suspend fun addRow(newRow: TeacherModel): Unit = suspendTransaction {
         TeachersDAO.new {
             index = newRow.index
             username = newRow.username

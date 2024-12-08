@@ -22,5 +22,5 @@ fun Application.module() {
     configureTemplating()
     configureHTTP()
     configureSecurity(passwordRepo, teacherRepo, studentRepo, adminRepo)
-    configureRouting()
+    configureRouting(studentRepo, teacherRepo, passwordRepo)
 }
