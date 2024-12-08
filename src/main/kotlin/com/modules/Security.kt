@@ -25,10 +25,15 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 
+// Username value can be either username or index
+@Serializable
+data class UserSession(val username: String, val password: String, val userType: String)
+
 fun Application.configureSecurity() {
     install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
+        cookie<UserSession>("user_session") {
+            cookie.path = "/"
+            cookie.maxAgeInSeconds = 120
         }
     }
     authentication {

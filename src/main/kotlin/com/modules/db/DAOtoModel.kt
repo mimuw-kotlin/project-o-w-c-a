@@ -4,10 +4,12 @@ import com.modules.db.DAO.ClassesDAO
 import com.modules.db.DAO.StudentsDAO
 import com.modules.db.DAO.SubjectsDAO
 import com.modules.db.DAO.TeachersDAO
+import com.modules.db.DAO.PasswordsDAO
 import com.modules.db.dataModels.ClassModel
 import com.modules.db.dataModels.StudentModel
 import com.modules.db.dataModels.SubjectModel
 import com.modules.db.dataModels.TeacherModel
+import com.modules.db.dataModels.PasswordModel
 
 fun studentDAOToModel(dao: StudentsDAO) = StudentModel(
     index = dao.index,
@@ -32,4 +34,9 @@ fun subjectDAOToModel(dao: SubjectsDAO) = SubjectModel(
     subject_code = dao.subject_index,
     subject_name = dao.subject_name,
     description = dao.description
+)
+
+fun passwordDAOToModel(dao: PasswordsDAO) = PasswordModel(
+    username = dao.username,
+    password = dao.password
 )
