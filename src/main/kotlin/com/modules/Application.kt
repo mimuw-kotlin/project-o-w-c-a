@@ -1,5 +1,6 @@
 package com.modules
 
+import com.modules.db.repos.AdminRepo
 import com.modules.db.repos.PasswordRepo
 import com.modules.db.repos.StudentRepo
 import com.modules.db.repos.TeacherRepo
@@ -20,6 +21,6 @@ fun Application.module() {
     configureDatabases(environment.config)
     configureTemplating()
     configureHTTP()
-    configureSecurity()
+    configureSecurity(passwordRepo)
     configureRouting()
 }

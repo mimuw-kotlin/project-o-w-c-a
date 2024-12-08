@@ -1,5 +1,12 @@
 package com.modules
 
+import com.modules.db.other.ConstsDB
+import com.modules.db.other.PswdCheckRetVal
+import com.modules.db.other.UserTypes
+import com.modules.db.repos.AdminRepo
+import com.modules.db.repos.PasswordRepo
+import com.modules.db.repos.StudentRepo
+import com.modules.db.repos.TeacherRepo
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -29,13 +36,47 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 @Serializable
 data class UserSession(val username: String, val password: String, val userType: String)
 
-fun Application.configureSecurity() {
+suspend fun checkPassword(pswdRepo: PasswordRepo, username: String, password: String): Boolean {
+
+
+    when (pswdRepo.checkPassword(username, password)) {
+        PswdCheckRetVal.USER_NOT_FOUND -> false
+        PswdCheckRetVal.PASSWORD_INCORRECT -> false
+        PswdCheckRetVal.PASSWORD_CORRECT -> true
+    }
+    return false
+}
+
+suspend fun checkUserType(
+    username: String,
+    teacherRepo: TeacherRepo,
+    studentRepo: StudentRepo,
+    adminRepo: AdminRepo ): String {
+    // We make three queries to the db, which is not optimal
+    // we should make a join query instead, but current impl of repos
+    // does not support it
+    if (adminRepo.getByUsername(username) != null)
+        return UserTypes.getType(ConstsDB.ADMIN)
+    if (teacherRepo.getByUsername(username) != null)
+        return UserTypes.getType(ConstsDB.TEACHER)
+    if (studentRepo.getByUsername(username) != null)
+        return UserTypes.getType(ConstsDB.STUDENT)
+
+    return ConstsDB.N_A
+}
+
+
+fun Application.configureSecurity(pswdRepo: PasswordRepo,
+                                  teacherRepo: TeacherRepo,
+                                  studentRepo: StudentRepo,
+                                  adminRepo: AdminRepo) {
     install(Sessions) {
         cookie<UserSession>("user_session") {
             cookie.path = "/"
             cookie.maxAgeInSeconds = 120
         }
     }
+
     authentication {
         val myRealm = "MyRealm"
         val usersInMyRealmToHA1: Map<String, ByteArray> = mapOf(
@@ -49,51 +90,79 @@ fun Application.configureSecurity() {
             }
         }
     }
+
     authentication {
+
+        session<UserSession>("auth-session") {
+            validate { session ->
+                if (checkPassword(pswdRepo, session.username, session.password))
+                    return@validate session
+                else
+                    return@validate null
+            }
+
+            challenge {
+                call.respondRedirect("/loginForm")
+            }
+        }
+
+
         basic(name = "myauth1") {
             realm = "Ktor Server"
             validate { credentials ->
-                if (credentials.name == credentials.password) {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    null
-                }
+                checkPassword(pswdRepo, credentials.name, credentials.password)
             }
         }
     
-        form(name = "myauth2") {
+        form(name = "login-form-auth") {
             userParamName = "user"
             passwordParamName = "password"
+
+            validate { credentials ->
+                if (checkPassword(pswdRepo, credentials.name, credentials.password))
+                    UserIdPrincipal(credentials.name)
+                else
+                {
+                    AuthenticationFailedCause.InvalidCredentials
+                    null
+                }
+            }
+
             challenge {
-                /**/
+                call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
             }
         }
     }
     routing {
-        get("/session/increment") {
-            val session = call.sessions.get<MySession>() ?: MySession()
-            call.sessions.set(session.copy(count = session.count + 1))
-            call.respondText("Counter is ${session.count}. Refresh to increment.")
-        }
-        authenticate("myDigestAuth") {
-            get("/protected/route/digest") {
-                val principal = call.principal<UserIdPrincipal>()!!
-                call.respondText("Hello ${principal.name}")
+
+
+        authenticate("login-form-auth") {
+            post("/login"){
+
+                val existingSession = call.sessions.get<UserSession>()
+
+                if (existingSession != null)
+                {
+                    call.respondText("Already logged in as ${existingSession.username}.")
+                }
+                else
+                {
+                    val userName = call.principal<UserIdPrincipal>()?.name.toString()
+                    val userType = checkUserType(userName, teacherRepo, studentRepo, adminRepo)
+                    val password = call.parameters["password"].toString()
+                    call.sessions.set(UserSession(userName,
+                        password,
+                        userType))
+                    call.respondText("Logged in as $userName.")
+                }
             }
         }
-        authenticate("myauth1") {
-            get("/protected/route/basic") {
-                val principal = call.principal<UserIdPrincipal>()!!
-                call.respondText("Hello ${principal.name}")
-            }
-        }
-        authenticate("myauth2") {
-            get("/protected/route/form") {
+
+        authenticate("auth-session") {
+            get("/protected/session") {
                 val principal = call.principal<UserIdPrincipal>()!!
                 call.respondText("Hello ${principal.name}")
             }
         }
     }
 }
-@Serializable
-data class MySession(val count: Int = 0)
