@@ -20,6 +20,23 @@ Dziennik szkolny, będzie aplikacją webową starającą się skorzystać na ost
 (chyba we frameworku SpringBoot)
 - Następnie dorobić do tego UI (które nie będzie szkicowe) i dodać profile użytkowników, logowania, admina
 
-## Libraries
-- Korge (https://korge.org/)
-- kotlinx-serialization (https://github.com/Kotlin/kotlinx.serialization)
+## Co aktualnie udało się zrobić:
+- Serwer asynchroniczny z kilkoma routami 
+- Baza danych z kilkoma tabelami i komunikacja między bazą danych a serwerem
+- Logowanie i rejestracja użytkowników i zapisywanie ich do bazy danych
+- Mechanizm sesji
+- zapisywanie hashowanych haseł do bazy danych
+- szczątkowe UI aktualnie w większości budowane w serwerze a nie w thymeleafie
+- zaczęcie budowania UI w thymeleafie
+
+## Co do zrobienia:
+- zrobienie całego UI w thymeleaf i dodanie np. bootstrapa żeby ładniej wyglądało
+- dodanie CSRF protection
+- dodanie SSL żeby https działało
+- dodanie swagger file
+- dodanie panelu zarządzanai dla admina, nauczyciela (zmiany klasy ucznia, nazwy klasy, zmian user_type itp, kilka opcji)
+- panel admina gdzie akceptuje nowych użytkowników
+- dodanie możliwości zmiany hasła, nazwy użytkownika
+- identyfikowanie po indexie nie po username
+- dodanie wyświetlania wszystkich uczniów, wszystkich uczniów danej klasy
+- (jeśli zdąże) dodanie możliwości dodawania ocen, przedmiotów, planu 
