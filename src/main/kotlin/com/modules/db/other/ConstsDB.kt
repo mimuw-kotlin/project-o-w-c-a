@@ -22,4 +22,5 @@ object ConstsDB{
     const val PASSWORDS = "passwords"
     const val PASSWORD = "password"
     const val SUPER_ADMIN = "superAdmin"
+    const val SALT = "salt"
 }

@@ -36,5 +36,6 @@ fun subjectDAOToModel(dao: SubjectsDAO) = SubjectModel(
 
 fun passwordDAOToModel(dao: PasswordsDAO) = PasswordModel(
     username = dao.username,
-    password = dao.password
+    password = dao.password,
+    salt = dao.salt
 )

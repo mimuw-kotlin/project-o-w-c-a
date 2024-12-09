@@ -34,15 +34,15 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 
 // Username value can be either username or index - currently only username is supported
 @Serializable
-data class UserSession(val username: String, val password: String, val userType: String)
+data class UserSession(val username: String, val userType: String)
 
 suspend fun checkPassword(pswdRepo: PasswordRepo, username: String, password: String): Boolean {
-    when (pswdRepo.checkPassword(username, password)) {
+    val pswdCheckRetVal = pswdRepo.checkPassword(username, password)
+    return when (pswdCheckRetVal) {
         PswdCheckRetVal.USER_NOT_FOUND -> false
         PswdCheckRetVal.PASSWORD_INCORRECT -> false
         PswdCheckRetVal.PASSWORD_CORRECT -> true
     }
-    return false
 }
 
 suspend fun checkUserType(
@@ -71,7 +71,7 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
     install(Sessions) {
         cookie<UserSession>("user_session") {
             cookie.path = "/"
-            cookie.maxAgeInSeconds = 120
+            cookie.maxAgeInSeconds = 30
         }
     }
 
@@ -92,9 +92,13 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
     authentication {
 
         session<UserSession>("auth-session") {
-            validate { session ->
-                if (checkPassword(pswdRepo, session.username, session.password))
+            validate { session: UserSession? ->
+                println("LOG: session : ${session}")
+                if (session != null)
+                {
+                    println("LOG: User ${session.username} validated SESSION. UserType: ${session.userType}")
                     return@validate session
+                }
                 else
                     return@validate null
             }
@@ -137,28 +141,41 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
             post("/login"){
 
                 val existingSession = call.sessions.get<UserSession>()
-
                 if (existingSession != null)
                 {
                     call.respondText("Already logged in as ${existingSession.username}.")
                 }
                 else
                 {
+                    println("LOG: before call.recvParam")
+
+                    println("LOG: after call.recvParam")
                     val userName = call.principal<UserIdPrincipal>()?.name.toString()
                     val userType = checkUserType(userName, teacherRepo, studentRepo, adminRepo)
-                    val password = call.parameters["password"].toString()
                     call.sessions.set(UserSession(userName,
-                        password,
                         userType))
                     call.respondText("Logged in as $userName.")
                 }
             }
         }
 
+
         authenticate("auth-session") {
             get("/protected/session") {
-                val principal = call.principal<UserIdPrincipal>()!!
-                call.respondText("Hello ${principal.name}")
+
+                println("LOG: before first call principal")
+                // we use UserPrincipalId only when user is logging in, now we have
+                // session instead and UserPrincipalID will be null if we use it in call.principal
+                val userSession = call.principal<UserSession>()
+//                val userSession = call.sessions.get<UserSession>()
+                println("LOG: after first call principal: ")
+                call.respondText("Hello ${userSession?.username}")
+            }
+
+            get ("/logout")
+            {
+                call.sessions.clear<UserSession>()
+                call.respondText("Logged out.")
             }
         }
     }

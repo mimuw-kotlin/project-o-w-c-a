@@ -39,7 +39,8 @@ DROP TABLE IF EXISTS passwords;
 CREATE TABLE passwords (
    id SERIAL PRIMARY KEY,
    username VARCHAR(70) NOT NULL,
-   password VARCHAR(70) NOT NULL
+   password VARCHAR(70) NOT NULL,
+   salt VARCHAR(70) NOT NULL
 );
 
 CREATE TABLE admin (

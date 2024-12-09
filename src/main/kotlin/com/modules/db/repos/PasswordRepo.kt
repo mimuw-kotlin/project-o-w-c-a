@@ -1,14 +1,12 @@
 package com.modules.db.repos
 
 import com.modules.db.DAO.PasswordsDAO
-import com.modules.db.dataModels.PasswordModel
 import com.modules.db.other.PasswordUtils
 import com.modules.db.other.PswdCheckRetVal
 import com.modules.db.passwordDAOToModel
 import com.modules.db.reposInterfaces.PasswordInterface
 import com.modules.db.suspendTransaction
 import com.modules.db.tables.PasswordsTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class PasswordRepo : PasswordInterface {
     override suspend fun checkPassword(username: String, password: String): PswdCheckRetVal = suspendTransaction{
@@ -19,25 +17,28 @@ class PasswordRepo : PasswordInterface {
             .firstOrNull()
 
         if (details == null)
-        {
-            println("LOG: pswdRepo.checkPassword: user not found")
             return@suspendTransaction PswdCheckRetVal.USER_NOT_FOUND
-        }
-        val hashedPassword = PasswordUtils.hashPassword(password)
-        println("LOG: pswdRepo.checkPassword: hashedPassword: $hashedPassword")
-        val retCheckVal = PasswordUtils.verifyPassword(password, details.password)
+
+        val retCheckVal = PasswordUtils.verifyPassword(
+                                                passwordFromUserInput = password,
+                                                salt = details.salt,
+                                                hashedPassword = details.password)
 
         if (retCheckVal)
+        {
+            println("returning PASSWORD_CORRECT")
             return@suspendTransaction PswdCheckRetVal.PASSWORD_CORRECT
+        }
 
         return@suspendTransaction PswdCheckRetVal.PASSWORD_INCORRECT
     }
 
     override suspend fun setPassword(username: String, password: String) = suspendTransaction{
-        val hashedPassword = PasswordUtils.hashPassword(password)
+        val hashedPasswordWithSalt = PasswordUtils.hashPassword(password)
         val user = PasswordsDAO.new {
             this.username = username
-            this.password = hashedPassword
+            this.password = hashedPasswordWithSalt.first
+            this.salt = hashedPasswordWithSalt.second
         }
     }
 }

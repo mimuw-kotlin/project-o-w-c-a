@@ -85,7 +85,7 @@ fun Application.configureRouting(studentRepo: StudentRepo,
 
             if (existingSession != null)
             {
-                call.respondText("Already logged in as ${existingSession.username}.")
+                call.respondText("Routing.kt - Already logged in as ${existingSession.username}.")
             }
 
             call.respondHtml {
