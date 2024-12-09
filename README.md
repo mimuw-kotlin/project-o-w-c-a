@@ -1,24 +1,42 @@
-# Frobnicator (this is a template)
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/M0kyOMLZ)
+# Dziennik szkolny
 
 ## Authors
-- Andrzej Głuszak (@agluszak on GitHub)
-- Linus Torvalds (@torvalds on GitHub)
+- Krzysztof Lembryk
 
 ## Description
-Frobnicator is going to be a platformer game similar to Super Mario Bros made using Korge game engine.
+Dziennik szkolny, będzie aplikacją webową starającą się skorzystać na ostatniej fali niepopularności dziennika internetowego VULCAN.
 
 ## Features
-- map generator
-- shooting
-- enemy AI
-- game state saving and loading
-- scores
+- wielowątkowy serwer w kotlinie
+- baza danych
+- bezpieczne logowanie i tworzenie użytkowników
+- panel admina
+- Frontend w kotlnie
+- dostęp do ocen, wykresów, średnich z ocen, archiwum przedmiotów, planu zajęć itp.
 
 ## Plan
-In the first part we're going to implement the basics: movement, physics and shooting. The enemies will simply bounce from one edge of the platform to the other. There will be only a single map.
+- Na początek chciałbym zaimplementować serwer (przypuszczalnie REST API) komunikujący się z bazą danych
+(chyba we frameworku SpringBoot)
+- Następnie dorobić do tego UI (które nie będzie szkicowe) i dodać profile użytkowników, logowania, admina
 
-In the second part we're going to add random map generator, saving/loading, scores and a more sophisticated AI.
+## Co aktualnie udało się zrobić:
+- Serwer asynchroniczny z kilkoma routami 
+- Baza danych z kilkoma tabelami i komunikacja między bazą danych a serwerem
+- Logowanie i rejestracja użytkowników i zapisywanie ich do bazy danych
+- Mechanizm sesji
+- zapisywanie hashowanych haseł do bazy danych
+- szczątkowe UI aktualnie w większości budowane w serwerze a nie w thymeleafie
+- zaczęcie budowania UI w thymeleafie
 
-## Libraries
-- Korge (https://korge.org/)
-- kotlinx-serialization (https://github.com/Kotlin/kotlinx.serialization)
+## Co do zrobienia:
+- zrobienie całego UI w thymeleaf i dodanie np. bootstrapa żeby ładniej wyglądało
+- dodanie CSRF protection
+- dodanie SSL żeby https działało
+- dodanie swagger file
+- dodanie panelu zarządzanai dla admina, nauczyciela (zmiany klasy ucznia, nazwy klasy, zmian user_type itp, kilka opcji)
+- panel admina gdzie akceptuje nowych użytkowników
+- dodanie możliwości zmiany hasła, nazwy użytkownika
+- identyfikowanie po indexie nie po username
+- dodanie wyświetlania wszystkich uczniów, wszystkich uczniów danej klasy
+- (jeśli zdąże) dodanie możliwości dodawania ocen, przedmiotów, planu 
