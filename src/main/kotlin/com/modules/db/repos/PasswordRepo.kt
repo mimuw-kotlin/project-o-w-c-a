@@ -25,10 +25,7 @@ class PasswordRepo : PasswordInterface {
                                                 hashedPassword = details.password)
 
         if (retCheckVal)
-        {
-            println("returning PASSWORD_CORRECT")
             return@suspendTransaction PswdCheckRetVal.PASSWORD_CORRECT
-        }
 
         return@suspendTransaction PswdCheckRetVal.PASSWORD_INCORRECT
     }

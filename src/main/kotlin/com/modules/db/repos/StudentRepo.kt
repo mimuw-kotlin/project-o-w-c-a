@@ -41,6 +41,11 @@ class StudentRepo : SchoolUsersInterface<StudentModel>{
     }
 
     override suspend fun addRow(newRow: StudentModel): Unit = suspendTransaction {
+
+        // Here we should throw exception - TODO
+        if (StudentsDAO.find {(StudentsTable.index eq newRow.index)}.count() > 0)
+            return@suspendTransaction
+
         StudentsDAO.new {
             index = newRow.index
             username = newRow.username

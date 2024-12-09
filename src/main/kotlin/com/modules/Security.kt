@@ -53,12 +53,17 @@ suspend fun checkUserType(
     // We make three queries to the db, which is not optimal
     // we should make a join query instead, but current impl of repos
     // does not support it
-    if (adminRepo.getByUsername(username) != null)
-        return UserTypes.getType(ConstsDB.ADMIN)
-    if (teacherRepo.getByUsername(username) != null)
-        return UserTypes.getType(ConstsDB.TEACHER)
-    if (studentRepo.getByUsername(username) != null)
-        return UserTypes.getType(ConstsDB.STUDENT)
+    val admin = adminRepo.getByUsername(username)
+    if (admin != null)
+        return UserTypes.getType(admin.user_type)
+
+    val teacher = teacherRepo.getByUsername(username)
+    if (teacher != null)
+        return UserTypes.getType(teacher.user_type)
+
+    val student = studentRepo.getByUsername(username)
+    if (student != null)
+        return UserTypes.getType(student.user_type)
 
     return ConstsDB.N_A
 }
@@ -93,7 +98,6 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
 
         session<UserSession>("auth-session") {
             validate { session: UserSession? ->
-                println("LOG: session : ${session}")
                 if (session != null)
                 {
                     println("LOG: User ${session.username} validated SESSION. UserType: ${session.userType}")
@@ -163,13 +167,12 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
         authenticate("auth-session") {
             get("/protected/session") {
 
-                println("LOG: before first call principal")
                 // we use UserPrincipalId only when user is logging in, now we have
                 // session instead and UserPrincipalID will be null if we use it in call.principal
                 val userSession = call.principal<UserSession>()
 //                val userSession = call.sessions.get<UserSession>()
-                println("LOG: after first call principal: ")
-                call.respondText("Hello ${userSession?.username}")
+                call.respondText("Hello from logged in only site ${userSession?.username}," +
+                        "your type is ${userSession?.userType}")
             }
 
             get ("/logout")
