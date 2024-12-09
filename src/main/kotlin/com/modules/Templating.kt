@@ -24,6 +24,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import io.ktor.server.auth.*
 
 fun Application.configureTemplating() {
     install(Thymeleaf) {
@@ -34,12 +35,12 @@ fun Application.configureTemplating() {
         })
     }
     routing {
-        authenticate("auth-session") {
+//        authenticate("auth-session") {
             get("/homepage") {
                 val session = call.sessions.get<UserSession>()
                 call.respond(ThymeleafContent("homepage", mapOf("user" to ThymeleafUser(1, "user1"))))
             }
-        }
+//        }
         get("/html-thymeleaf") {
             call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
         }
