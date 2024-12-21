@@ -73,53 +73,7 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
                                   teacherRepo: TeacherRepo,
                                   studentRepo: StudentRepo,
                                   adminRepo: AdminRepo) {
-    install(Sessions) {
-        cookie<UserSession>("user_session") {
-            cookie.path = "/"
-            cookie.maxAgeInSeconds = 30
-        }
-    }
-
     authentication {
-        val myRealm = "MyRealm"
-        val usersInMyRealmToHA1: Map<String, ByteArray> = mapOf(
-            // pass="test", HA1=MD5("test:MyRealm:pass")="fb12475e62dedc5c2744d98eb73b8877"
-            "test" to hex("fb12475e62dedc5c2744d98eb73b8877")
-        )
-    
-        digest("myDigestAuth") {
-            digestProvider { userName, realm ->
-                usersInMyRealmToHA1[userName]
-            }
-        }
-    }
-
-    authentication {
-
-        session<UserSession>("auth-session") {
-            validate { session: UserSession? ->
-                if (session != null)
-                {
-                    println("LOG: User ${session.username} validated SESSION. UserType: ${session.userType}")
-                    return@validate session
-                }
-                else
-                    return@validate null
-            }
-
-            challenge {
-                call.respondRedirect("/loginForm")
-            }
-        }
-
-
-        basic(name = "myauth1") {
-            realm = "Ktor Server"
-            validate { credentials ->
-                checkPassword(pswdRepo, credentials.name, credentials.password)
-            }
-        }
-
         form(name = "login-form-auth") {
             userParamName = "username"
             passwordParamName = "password"
@@ -139,8 +93,8 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
             }
         }
     }
-    routing {
 
+    routing {
         authenticate("login-form-auth") {
             post("/login"){
 
@@ -151,9 +105,6 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
                 }
                 else
                 {
-                    println("LOG: before call.recvParam")
-
-                    println("LOG: after call.recvParam")
                     val userName = call.principal<UserIdPrincipal>()?.name.toString()
                     val userType = checkUserType(userName, teacherRepo, studentRepo, adminRepo)
                     call.sessions.set(UserSession(userName,
@@ -162,7 +113,6 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
                 }
             }
         }
-
 
         authenticate("auth-session") {
             get("/protected/session") {
@@ -175,8 +125,7 @@ fun Application.configureSecurity(pswdRepo: PasswordRepo,
                         "your type is ${userSession?.userType}")
             }
 
-            get ("/logout")
-            {
+            get ("/logout") {
                 call.sessions.clear<UserSession>()
                 call.respondText("Logged out.")
             }

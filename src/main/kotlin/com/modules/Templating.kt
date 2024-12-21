@@ -35,12 +35,14 @@ fun Application.configureTemplating() {
         })
     }
     routing {
-//        authenticate("auth-session") {
+        authenticate("auth-session") {
             get("/homepage") {
                 val session = call.sessions.get<UserSession>()
-                call.respond(ThymeleafContent("homepage", mapOf("user" to ThymeleafUser(1, "user1"))))
+                if (session != null) {
+                    call.respond(ThymeleafContent("homepage", mapOf("user" to ThymeleafUser(1, session.username))))
+                }
             }
-//        }
+        }
         get("/html-thymeleaf") {
             call.respond(ThymeleafContent("index", mapOf("user" to ThymeleafUser(1, "user1"))))
         }
