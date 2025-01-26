@@ -3,8 +3,7 @@ package com.modules.db.dataModels
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PasswordModel (
+class PasswordModel(
     var username: String,
     var password: String,
-    var salt: String
 )

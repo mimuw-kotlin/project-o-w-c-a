@@ -4,6 +4,40 @@
 ## Authors
 - Krzysztof Lembryk
 
+## Jak uruchomić Dockera
+W folderze w którym mamy plik Dockerfile wpisujemy:
+- ./gradlew buildFatJar
+- docker-compose build
+- docker-compose run  -p 8080:8080 -p 8443:8443 web (musimy zrobić run bo compose up nie expose'uje portów)
+- *(Czasem run może nie zadziałać ze względu na używany już przez kogoś port 8080, wtedy albo czekamy albo sprawdzamy czy w dockerze nie ma już kontenera z tym portem i go usuwamy)*
+- docker-compose down (kiedy chcemy zatrzymać i usunąć kontenery)
+<br>
+  <span style="color: green;"> (ALBO można użyć skryptu ./docker_rebuild_script.sh do wykonania powyższych kroków) </span>
+<br>
+- Uwaga - adres wyświetlany w konsoli to 0.0.0.0 ale jest to adres naszej aplikacji wewnątrz dockera,
+aby wejść na stronę z naszego komputera trzeba użyć **localhost** albo **127.0.0.1**
+<br>
+- Uwaga - plik keystore.jks nie powinien być w repo, a powinno się
+go tworzyć samemu poprzez użycie komendy
+```
+keytool -keystore keystore.jks -alias dziennikKey -genkeypair -keyalg RSA -keysize 4096 -validity 3 -dname 'CN=localhost, OU=ktor, O=ktor, L=Unspecified, ST=Unspecified, C=US'
+```
+Jednakże w celu ułatwienia procesu ten plik już jest w repo i jest on kopiowany do kontenera.
+Również application.yaml nie powinno być w repo bo mamy tam hasła, klucze prywatne itp.
+
+<span style="color:red">UWAGA</span> -
+W bazie danych defaultowo jest już jeden użytkownik: **superAdmin**
+Jego hasło to: **admin**
+
+Jeśli po zalogowaniu występuje błąd odnoszący się do bazy danych to należy usunąć cały folder tmp, usunąć powstałe 
+kontenery z dockera i zbudować wszystko od nowa, powinno wtedy zadziałać.
+
+
+Żeby uruchomić projekt lokalnie trzeba w pliku application.yaml w postgres w jdbcURL zmienić **db** na **localhost**
+
+
+Długość sesji to 60 sekund, ale można to zmienić modyfikując stałą SESSION_LENGTH w pliku AppConsts
+
 ## Description
 Dziennik szkolny, będzie aplikacją webową starającą się skorzystać na ostatniej fali niepopularności dziennika internetowego VULCAN.
 
@@ -37,6 +71,22 @@ Dziennik szkolny, będzie aplikacją webową starającą się skorzystać na ost
 - dodanie panelu zarządzanai dla admina, nauczyciela (zmiany klasy ucznia, nazwy klasy, zmian user_type itp, kilka opcji)
 - panel admina gdzie akceptuje nowych użytkowników
 - dodanie możliwości zmiany hasła, nazwy użytkownika
-- identyfikowanie po indexie nie po username
 - dodanie wyświetlania wszystkich uczniów, wszystkich uczniów danej klasy
 - (jeśli zdąże) dodanie możliwości dodawania ocen, przedmiotów, planu 
+
+## Co ostatecznie udało się zrobić
+- UI w thymeleaf z bootstrapem
+- dodanie SSL i przekierowania wszystkich żądań http na https
+- dodanie szyfrowania cookies sesyjnych
+- dodanie Dockera
+- dodanie kilku testów
+- dodanie ktlint formatera (który rzuca błędami odnośnie wildcard imports, które w intellj są 
+defaultowym sposobem importowania i nie udało mi się zmienić konfiguracji ktlinta żeby to ignorował)
+- dodanie dosyć dużo routów
+- nie zmieniłem identyfikacji z username na index, ale dodałem check że username'y muszą być unikalne
+- panel zarządzania dla admina - modyfikowanie użytkowników, aktywowanie użytkowników (czyli akceptowanie nowych użytkowników), 
+usuwanie uzytkownikow, przydzielanie do klas, dodawanie przedmiotow
+- Zmiana nazwy użytkownika poprzez panel admina
+- możliwość wyświetlenia wszystkich użytkowników (admin), wszystkich nauczycieli i uczniów twojej klasy (nauczyciel),
+wszystkich uczniów z twojej klasy i wychowawce (uczeń)
+- Nauczyciele mogą przypisać się do danej klasy, admin może przypisać dany pzredmiot do nauczyciela

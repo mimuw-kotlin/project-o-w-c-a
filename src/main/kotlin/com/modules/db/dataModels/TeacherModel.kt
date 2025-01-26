@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class TeacherModel(
     val index: String,
     val username: String,
-    val user_type: String,
-    val class_nbr: String
+    val userType: String,
+    val classNbr: String,
+    val subjectIndex: String,
+    val active: Boolean,
 )

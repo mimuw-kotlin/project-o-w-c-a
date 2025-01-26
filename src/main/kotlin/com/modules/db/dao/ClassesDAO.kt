@@ -1,14 +1,13 @@
-package com.modules.db.DAO
+package com.modules.db.dao
 
 import com.modules.db.tables.ClassesTable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-class ClassesDAO (id: EntityID<Int>) : IntEntity(id){
-
+class ClassesDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ClassesDAO>(ClassesTable)
 
-    val class_nbr by ClassesTable.class_nbr
-    val class_teacher_name by ClassesTable.class_teacher_name
+    var classNbr by ClassesTable.classNbr
+    var classTeacherName by ClassesTable.classTeacherName
 }

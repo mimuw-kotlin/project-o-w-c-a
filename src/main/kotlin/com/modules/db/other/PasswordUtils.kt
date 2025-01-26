@@ -7,11 +7,10 @@ object PasswordUtils {
         return Pair(BCrypt.hashpw(passwordFromUserInput, salt), salt)
     }
 
-    fun verifyPassword(passwordFromUserInput: String,
-                       salt: String,
-                       hashedPassword: String): Boolean {
-//        val inputHashed = BCrypt.hashpw(passwordFromUserInput, salt)
+    fun verifyPassword(
+        passwordFromUserInput: String,
+        hashedPassword: String,
+    ): Boolean {
         return BCrypt.checkpw(passwordFromUserInput, hashedPassword)
-//        return inputHashed == hashedPassword
     }
 }
